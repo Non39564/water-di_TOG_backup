@@ -1,8 +1,6 @@
-from fpdf import FPDF
-from flask import Flask, make_response, jsonify, request, Response
+from flask import Flask, make_response, jsonify, request, Response, flash, redirect, url_for
 from flask_login import LoginManager
-import flask_login, flask
-import json, requests
+import flask_login, flask, generate, json, requests, os, base64
 from flask import render_template as real_render_template
 from functools import partial
 from db import *
@@ -11,12 +9,16 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 app.secret_key = 'waterdishow'
+app.config['UPLOAD_FOLDER'] = './static/signature/'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 error = showerror()
 user_recept = show_recept()
 render_template = partial(real_render_template, error=error, user_recept=user_recept)
 
-
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 dataexport = 0
 
@@ -96,10 +98,22 @@ def login():
             username = flask.request.form['registerUsername']
             password = flask.request.form['registerPassword']
             password_again = flask.request.form['registerRepeatPassword']
+            department = flask.request.form['DP']
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            Signature = request.files['file']
+            if Signature.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
             if password == password_again:
-                insert_Pre_User(username, Name, password)
-                waitforrecept = "True"
-                return render_template('index.html', waitforrecept=waitforrecept)
+                if Signature and allowed_file(Signature.filename):
+                    Signature.save(os.path.join(app.config['UPLOAD_FOLDER'], Name+'.png'))
+                    file = open(f'./static/signature/{Name}.png','rb').read()
+                    file = base64.b64encode(file)
+                    insert_Pre_User(username, Name, password, file, department)
+                    waitforrecept = "True"
+                    return render_template('index.html', waitforrecept=waitforrecept)
             else:
                 notmatchpassword = "True"
                 return render_template('index.html', notmatchpassword=notmatchpassword)
@@ -192,14 +206,14 @@ def unauthorized_handler():
     return 'Unauthorized', 401
     
 @app.route('/setup')
-# @flask_login.login_required
+@flask_login.login_required
 def setup():
     setup = setupMachine()
     show_machine = machine_DropDown_setup()
     return render_template('setup.html', setup = setup, show_machine = show_machine)
 
 @app.route('/find_setup')
-# @flask_login.login_required
+@flask_login.login_required
 def find_setup():
     selectionMachine = request.args.get('selectionMachine')
     setup = show_site_machine(selectionMachine)
@@ -220,7 +234,7 @@ def confirm_reject():
     return flask.redirect(flask.url_for('index'))
 
 @app.route('/change_setup' , methods=['GET', 'POST'])
-# @flask_login.login_required
+@flask_login.login_required
 def change_setup():
     setup = setupMachine()
     name_site = []
@@ -236,6 +250,30 @@ def change_setup():
         minus_temp = request.args.get(f'Minus_Temp_{name_site[j]}')
         update_setup(site, low_water, high_water, plus_water, minus_water, plus_temp, minus_temp)
     return flask.redirect(flask.url_for('setup'))
+
+@app.route('/sendfile', methods=['POST', 'GET'])
+@flask_login.login_required
+def sendfile():
+   template = './static/document/ใบขอใช้บริการระบบงานคอมพิวเตอร์.docx'
+   signature = './static/signature/pramote.png'
+   order_id = request.form['order_id']
+   invoice = {
+        'invoice_no': request.form['order_id'],
+        'detail' : request.form['detail'],
+        'order_name' : request.form['order_name'],
+        'name': request.form['name'],
+        'repair_name': request.form['repair_name'],
+        'total': request.form['price'],
+    
+    }
+   print(invoice)
+   document = generate.from_template(template, signature, invoice)
+   document.seek(0)
+
+   return send_file(
+        document, mimetype='application/vnd.openxmlformats-'
+        'officedocument.wordprocessingml.document', as_attachment=True,
+        attachment_filename=f'ใบเสร็จที่ {order_id}.docx')
 
 ########################### End Function Login ###########################
 
@@ -293,115 +331,14 @@ def trendDiChart():
     print(P4)
     return render_template('trend-di-chart.html', P4 = P4, P5 = P5, P9 = P9)
 
+@app.route('/document')
+def document():
+    return render_template('document.html')
+
 @app.route('/status-carbon-resin')
 def statusCR():
     return render_template('status-carbon-resin.html')
 
-@app.route('/download_alert')
-def download_alert():
-    report = error_report()
-    pdf = FPDF("P", "mm", "A4")
-    pdf.add_page()
-    pdf.add_font('THSarabunNew', '', 'THSarabunNew.ttf', uni=True)
-    
-    page_width = pdf.w - 2 * pdf.l_margin
-
-    pdf.set_font('THSarabunNew', '',14.0) 
-    pdf.cell(page_width, 0.0, 'Alert Data', align='C')
-    pdf.ln(10)
-    
-    pdf.set_font('THSarabunNew', '', 12)
-    
-    col_width = page_width/5
-    
-    pdf.ln(1)
-    
-    th = pdf.font_size*2
-
-    pdf.set_fill_color(229, 229, 229)
-    pdf.cell(col_width, th, str("Station"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Phase"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Machine"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Detail"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Date"), 1, 0, 'C')
-    pdf.ln(th)
-    
-    for row in report:
-        pdf.cell(col_width, th, str(row['Station']), border=1)
-        pdf.cell(col_width, th, str(row['Phase']), border=1)
-        pdf.cell(col_width, th, str(row['Site']), border=1)
-        pdf.cell(col_width, th, str(row['Detail']), border=1)
-        pdf.cell(col_width, th, str(row['Data']), border=1)
-        pdf.ln(th)
-        
-    pdf.ln(10)
-    
-    pdf.set_font('THSarabunNew','',10.0) 
-    pdf.cell(page_width, 0.0, '- end of report -', align='C')
-    
-    response = make_response(pdf.output(dest='S').encode('latin-1'))
-    response.headers.set('Content-Disposition', 'attachment', filename="Alert Report" + '.pdf')
-    response.headers.set('Content-Type', 'application/pdf')
-    
-    return response
-
-@app.route('/download_Overview')
-def download_Overview():
-    report = di_report()
-    pdf = FPDF("P", "mm", "A4")
-    pdf.add_page()
-    pdf.add_font('THSarabunNew', '', 'THSarabunNew.ttf', uni=True)
-    
-    page_width = pdf.w - 2 * pdf.l_margin
-
-    pdf.set_font('THSarabunNew', '',14.0) 
-    pdf.cell(page_width, 0.0, 'Deionized water Data', align='C')
-    pdf.ln(10)
-    
-    pdf.set_font('THSarabunNew', '', 12)
-    
-    col_width = page_width/6
-    
-    pdf.ln(1)
-    
-    th = pdf.font_size*2
-
-    pdf.set_fill_color(229, 229, 229)
-    pdf.cell(col_width, th, str("Date"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Phase"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Machine"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Status"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("DIWater"), 1, 0, 'C')
-    pdf.cell(col_width, th, str("Temp"), 1, 0, 'C')
-    pdf.ln(th)
-    
-    for row in report:
-        if row["Water"] > 12:
-            Status = "Pass"
-        elif row["Water"] >= 10 and row["Water"] < 12:
-            Status = "Monitor"
-        else:
-            Status = "Error"
-        pdf.cell(col_width, th, str(row['Date']), border=1)
-        pdf.cell(col_width, th, str(row['Phase']), border=1)
-        pdf.cell(col_width, th, str(row['Site']), border=1)
-        pdf.cell(col_width, th, str(Status), border=1)
-        pdf.cell(col_width, th, str(row['Water']), border=1)
-        pdf.cell(col_width, th, str(row['Temp']), border=1)
-        pdf.ln(th)
-        
-    pdf.ln(10)
-    
-    pdf.set_font('THSarabunNew','',10.0) 
-    pdf.cell(page_width, 0.0, '- end of report -', align='C')
-    
-    response = make_response(pdf.output(dest='S').encode('latin-1'))
-    response.headers.set('Content-Disposition', 'attachment', filename="Alert Report" + '.pdf')
-    response.headers.set('Content-Type', 'application/pdf')
-    
-    return response
-
-
 
 if __name__ == "__main__":
-    app.run(debug=True, host='10.3.9.156' ,port=80)
+    app.run(debug=True, port=8000)

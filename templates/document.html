@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block title %}Document{% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="card mt-3">
+    <div class="card-header bg-dark bg-gradient text-white">Form</div>
+      <div class="card-body">
+          <form action="{{ url_for('addmachine') }}" method='POST'>
+              <div class="row mb-4">
+                <div class="form-group col-md-4">
+                  <label for="MachineId">ชื่อ-นามสกุล ผู้ขอ</label>
+                  <input type="text" class="form-control" id="MachineId" name="MachineId" >
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="MachineIp">ตำแหน่ง</label>
+                  <input type="text" class="form-control" id="MachineIp" name="MachineIp">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="MachinePort">แผนก</label>
+                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="MachinePort">เบอร์ติอต่อ</label>
+                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="MachinePort">E-mail</label>
+                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="MachinePort">ฝ่าย/ส่วน</label>
+                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
+                </div>
+                <div class="form-outline datetimepicker">
+                    <input type="text" class="form-control" value="22/12/2020, 14:12:56" id="datetimepickerExample">
+                    <label for="datetimepickerExample" class="form-label">Select Date and Time</label>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="inputOpMac">Station</label>
+                  <select id="inputOpMac" name="inputOpMac" class="form-control inputOP">
+                    <option value="" disabled selected>Choose Station</option>
+                    <!--<option value="OP2">2</option>-->
+                  </select>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="inputPhaseMac">Phase</label>
+                  <select id="inputPhaseMac" name="inputPhaseMac" class="form-control inputPhase">
+                    <option value="" disabled selected>Choose Phase</option>
+                    <!--<option value="OP2">2</option>-->
+                  </select>
+                </div>
+              </div>
+              <input type="hidden" value="machine" name="add">
+              <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+      </div>
+  </div>
+{% endblock %}

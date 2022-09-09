@@ -340,17 +340,17 @@ def users():
     class_entry_relations = myDict
     return class_entry_relations
 
-def insert_Pre_User(username, Name, password):
+def insert_Pre_User(username, Name, password, Signature, Department):
     connection = getConnection()
     cursor = connection.cursor()
-    insert_Pre_User = "INSERT INTO pre_user VALUES ('%s','%s','%s')" % (username, Name, password)
+    insert_Pre_User = "INSERT INTO pre_user VALUES ('%s','%s','%s','%s','%s')" % (username, Name, password, Signature, Department)
     cursor.execute(insert_Pre_User)
     connection.commit()
     
 def confirm_User(Name):
     connection = getConnection()
     cursor = connection.cursor()
-    add_pre_user = "INSERT INTO User SELECT Username, Name, Password FROM Pre_User WHERE Name='%s'" % (Name)
+    add_pre_user = "INSERT INTO User SELECT Username, Name, Password, Signature, DepartmentID FROM Pre_User WHERE Name='%s'" % (Name)
     delete_pre_user = "DELETE FROM pre_user WHERE Name='%s'" % (Name)
     cursor.execute(add_pre_user)
     cursor.execute(delete_pre_user)
