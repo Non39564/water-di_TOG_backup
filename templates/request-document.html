@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+{% block title %}Request-document{% endblock %}
+{% block head %}
+<!-- DataTable -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+{% endblock %}
+{% block content %}
+<div class="card" >
+    <div class="card-header bg-dark bg-gradient text-white">เรื่องขอใช้งานทั้งหมด</div>
+    <div class="card-body">
+        <table class="table" id="request-doc" >
+            <thead>
+                <tr>
+                    <th>วันที่</th>
+                    <th>เวลา</th>
+                    <th>เรื่อง</th>
+                    <th>ส่งจาก</th>
+                    <th>สถานะ</th>
+                    <th>จัดการงาน</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for select in SelectDoc %}
+                <tr>
+                    <td>{{ select['date'] }}</td>
+                    <td>{{ select['time'] }}</td>
+                    <td>
+                        {{ select['service'] }}
+                        <input type="hidden" id="{{ select['KeyWork'] }}" value="{{ select['service'] }}" />
+                    </td>
+                    <td>{{ select['Name'] }}</td>
+                    <td>
+                        <a href="/confirm_request?KeyWork={{ select['KeyWork'] }}" target="_blank">
+                            <div class="link">
+                                {{ select['Status'] }}
+                           </div>
+                        </a>
+                        <input type="hidden" id="status{{ select['KeyWork'] }}" value="{{ select['StatusID'] }}" />
+                    </td>
+                    <td>
+                        <button value="{{ select['KeyWork'] }}" name="Edit" type="button" class="btn btn-link btn-sm text-bg-primary Edit edit{{ select['KeyWork'] }}">
+                        รับเรื่อง
+                        </button>
+                        <form action="{{ url_for('update_status_doc') }}" method='POST' class="state{{ select['KeyWork'] }}">
+                            <select class="select select{{ select['KeyWork'] }}" id="select" name="select">
+                                <option value="2">ได้รับเอกสารแล้ว</option>
+                                <option value="3">กำลังดำเนินการ</option>
+                                <option value="4">เสร็จสิ้นการดำเนินการ</option>
+                            </select>
+                            <input type="hidden" id="Status_ID{{ select['KeyWork'] }}" name="Status_ID{{ select['KeyWork'] }}" value="{{ select['KeyWork'] }}" />
+                            <button type="submit" class="btn btn-link btn-sm text-bg-primary Change">
+                                เปลี่ยนสถานะ
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready( function () {
+    $('#request-doc').DataTable({
+        pagingType: 'full_numbers',
+        scrollY: '500px',
+        scrollCollapse: true,
+        pageLength: 10,
+        order: [[0, 'desc']],
+        lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
+        responsive: true
+    });
+} );
+</script>
+<script>
+    {% for selectid in SelectDoc %}
+    $( ".Edit" ).click(function() {
+        window.open("document_it?KeyWork=" + $(this).val()+"&NameWork=" +$("#{{ selectid['KeyWork'] }}").val(), "_blank", 
+        "toolbar=yes,scrollbars=yes,resizable=yes,top=300,left=300,width=900,height=1000");
+      })
+    if ($("#status{{selectid['KeyWork']}}").val() != "1"){
+        $(".edit{{ selectid['KeyWork'] }}").hide()
+        $(".State{{ selectid['KeyWork'] }}").show() 
+    } else if ($("#status{{selectid['KeyWork']}}").val() === "1") {
+        $(".State{{ selectid['KeyWork'] }}").hide()
+        $(".edit{{ selectid['KeyWork'] }}").show()
+    }
+    $('option[value=' + $("#status{{ selectid['KeyWork'] }}").val() + ']').attr('selected',true);
+    {% endfor %}
+</script>
+{% endblock %}

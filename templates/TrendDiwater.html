@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
 {% block title %}TrendDi{% endblock %}
 {% block head %}
-<script src="{{ url_for('static', filename='js/line.js') }}"></script>
 <!-- Include Required Prerequisites -->
 <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <!-- Include Date Range Picker -->
@@ -14,190 +13,573 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
 <!-- DataTables date range filter -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css" />
 <!--End DataTables date range filter -->
+<!-- jquery css & script datepicker -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<!-- flatpicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!--Chart-->
+<script>
+google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawChartLine_Phase4);
+google.charts.setOnLoadCallback(drawChartLine_Phase5);
+google.charts.setOnLoadCallback(drawChartLine_Phase9);
+
+function drawChartLine_Phase4() {
+
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'Day');
+{% for columnP4 in columnP4 %}
+data.addColumn('number', '{{ columnP4['Site'] }}');
+{% endfor %}
+data.addColumn('number', 'Low');
+data.addColumn('number', 'Monitor');
+data.addColumn('number', 'Normal');
+
+data.addRows([
+{% for tableP4 in tableP4 %}
+  ['{{ tableP4['Date'] }}', {{ tableP4['Fisa 4'] }}, {{ tableP4['Fisa 2'] }}, {{ tableP4['ROBOT'] }},10 ,3, 17],
+{% endfor %}
+]);
+
+var options = {
+
+  'width':1100,
+  'height':300,
+  isStacked: true,
+  series: {
+    3: {
+      areaOpacity: 0.6,
+      color: '#EF9A9A',
+      visibleInLegend: false,
+      type: 'area'
+    },
+    4: {
+    areaOpacity: 0.6,
+    color: '#fee000',
+    visibleInLegend: false,
+    type: 'area'},
+    5: {
+      areaOpacity: 0.6,
+      color: '#9ff78d',
+      visibleInLegend: false,
+      type: 'area'},
+  },
+  
+};
+
+var chart = new google.visualization.ComboChart(document.getElementById('linechart_Phase4'));
+
+chart.draw(data, options);
+}
+
+function drawChartLine_Phase5() {
+
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Day');
+  {% for columnP5 in columnP5 %}
+  data.addColumn('number', '{{ columnP5['Site'] }}');
+  {% endfor %}
+  data.addColumn('number', 'Low');
+  data.addColumn('number', 'Monitor');
+  data.addColumn('number', 'Normal');
+  
+  data.addRows([
+  {% for tableP5 in tableP5 %}
+    ['{{ tableP5['Date'] }}', {{ tableP5['L14'] }}, {{ tableP5['L13'] }}, {{ tableP5['Fisa 3'] }}, {{ tableP5['L15 Station 2'] }}
+    , {{ tableP5['L15 Station 1'] }},10 ,3, 17],
+  {% endfor %}
+  ]);
+  var options = {
+    'width':1100,
+    'height':300,
+    isStacked: true,
+    series: {
+      5: {
+        areaOpacity: 0.6,
+        color: '#EF9A9A',
+        visibleInLegend: false,
+        type: 'area'
+      },
+      6: {
+      areaOpacity: 0.6,
+      color: '#fee000',
+      visibleInLegend: false,
+      type: 'area'},
+      7: {
+        areaOpacity: 0.6,
+        color: '#9ff78d',
+        visibleInLegend: false,
+        type: 'area'},
+    },
+    
+  };
+  
+  var chart = new google.visualization.ComboChart(document.getElementById('linechart_Phase5'));
+  if (data["Wf"][0]["c"][1]["v"] === 0){
+    $( "#dataP5" ).text( "No data available" );
+  } else {
+    chart.draw(data, options);
+  }
+  }
+
+  function drawChartLine_Phase9() {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Day');
+    {% for columnP9 in columnP9 %}
+    data.addColumn('number', '{{ columnP9['Site'] }}');
+    {% endfor %}
+    data.addColumn('number', 'Low');
+    data.addColumn('number', 'Monitor');
+    data.addColumn('number', 'Normal');
+    
+    data.addRows([
+    {% for tableP9 in tableP9 %}
+      ['{{ tableP9['Date'] }}', {{ tableP9['HC-4'] }}, {{ tableP9['HC-5 Station 1'] }}, {{ tableP9['HC-5 Station 2'] }}, {{ tableP9['HC-6'] }}
+      , {{ tableP9['AI'] }}, {{ tableP9['HC-3'] }},10 ,3, 17],
+    {% endfor %}
+    ]);
+    
+    var options = {
+      'width':1100,
+      'height':300,
+      isStacked: true,
+      series: {
+        6: {
+          areaOpacity: 0.6,
+          color: '#EF9A9A',
+          visibleInLegend: false,
+          type: 'area'
+        },
+        7: {
+        areaOpacity: 0.6,
+        color: '#fee000',
+        visibleInLegend: false,
+        type: 'area'},
+        8: {
+          areaOpacity: 0.6,
+          color: '#9ff78d',
+          visibleInLegend: false,
+          type: 'area'},
+      },
+      
+    };
+    
+    var chart = new google.visualization.ComboChart(document.getElementById('linechart_Phase9'));
+    
+    chart.draw(data, options);
+    }
+
+$(window).resize(function(){
+    drawChartLine_Phase4();
+    drawChartLine_Phase5();
+    drawChartLine_Phase9();
+  });
+</script>
+
 {% endblock %}
 {% block content %}
 <div class="card">
   <div class="card-header  bg-dark bg-gradient text-white">
-    <div class="row justify-content-lg-end">
-      <div class="col-lg-5">
-        <h5>Trend Deionized water</h5>
-      </div>
-      <div class="col-lg-7 d-flex justify-content-lg-end ">
-        <!-- date range filter -->
-        <table cellspacing="5" cellpadding="5">
-          <tbody>
-            <tr >
-              <td><h5>Choose Date :</h5></td>
-              <td><input type="text" class="form-control" id="min" name="min"></td>
-              <td><h5>To</h5></td>
-              <td><input type="text" class="form-control" id="max" name="max"></td>
-            </tr>
-          </tbody>
-        </table>
-      <!-- End date range filter -->
-    </div>
-    </div>
+    <h5>Trend Deionized water</h5>
   </div>
     <div class="card-body">
         <div class="card">
-            <div class="card-header bg-dark bg-gradient text-white d-flex justify-content-between">Phase4</div>
-              <div class="card-body">
-                  <div class="row">
-                              <table class="display table align-middle mb-0 bg-white" id="P4">
-                                  <thead class="bg-light">
-                                    <tr>
-                                      <th>Date</th>
-                                      <th>Time</th>
-                                      <th>Machine</th>
-                                      <th>StatusDIWater</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {% for P4 in P4 %}
-                                    <tr>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P4['Date'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P4['Time'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P4['Site'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p name="{{ P4['Site'] }}" class="mb-0 Status{{ P4['Site'] }}">Pass</p>
-                                        <input type="hidden" name="data{{ P4['Site'] }}"  value="{{ P4['Water'] }}">
-                                      </td>
-                                    </tr>
-                                    {% endfor %}
-                                  </tbody>
-                                </table>
-                    </div>
+            <div class="card-header bg-dark bg-gradient text-white d-flex justify-content-between">
+              <h5 class="col-lg-3">Phase4</h5>
+              <div class="col-lg-9 d-flex justify-content-lg-end ">
+                <!-- date range filter -->
+                <table cellspacing="5" cellpadding="5">
+                  <tbody>
+                    <tr >
+                      <td><h5 class="text-white mb-0">Choose Date :</h5></td>
+                      <td><input type="text" class="form-control" id="start_date_p4" /></td>
+                      <td><h5 class="text-white mb-0">To</h5></td>
+                      <td><input type="text" class="form-control" id="end_date_p4"/></td>
+                      <td>
+                        <button type="button" class="btn btn-success"id="submit-p4" name="submit"> Submit </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- End date range filter -->
               </div>
-          </div>
-          <div class="card mt-3">
-            <div class="card-header bg-dark bg-gradient text-white d-flex justify-content-between">Phase5
-              
             </div>
               <div class="card-body">
+                <div id="linechart_Phase4" class="display mb-5 p-3 border border-dark border-5 rounded-6" ></div>
+                <a type="button" class="btn btn-success mb-3 Export4">
+                  <i class="fa fa-file-excel me-2"></i><span>generate excel</span>
+                </a>
                   <div class="row">
-                              <table class="display table align-middle mb-0 bg-white" id="P5">
-                                  <thead class="bg-light">
-                                    <tr>
-                                      <th>Date</th>
-                                      <th>Time</th>
-                                      <th>Machine</th>
-                                      <th>StatusDIWater</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {% for P5 in P5 %}
-                                    <tr>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P5['Date'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P5['Time'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P5['Site'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p name="{{ P5['Site'] }}" class="mb-0 Status{{ P5['Site'] }}">Pass</p>
-                                        <input type="hidden" name="data{{ P5['Site'] }}"  value="{{ P5['Water'] }}">
-                                      </td>
-                                    </tr>
-                                    {% endfor %}
-                                  </tbody>
-                                </table>
+                    <table class="display table align-middle mb-0 bg-white" id="P4">
+                        <thead class="bg-light">
+                          <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Site</th>
+                            <th>StatusDIWater</th>
+                            <th>Water (MΩ)</th>
+                            <th>Temp (°C)</th>
+                          </tr>
+                        </thead>
+                    </table>
                   </div>
               </div>
           </div>
           <div class="card mt-3">
-            <div class="card-header bg-dark bg-gradient text-white d-flex justify-content-between">Phase9
+            <div class="card-header bg-dark bg-gradient text-white d-flex justify-content-between">
+              <h5 class="col-lg-3">Phase5</h5>
+              <div class="col-lg-9 d-flex justify-content-lg-end ">
+                <!-- date range filter -->
+                <table cellspacing="5" cellpadding="5">
+                  <tbody>
+                    <tr >
+                      <td><h5 class="text-white mb-0">Choose Date :</h5></td>
+                      <td><input type="text" class="form-control" id="start_date_p5" /></td>
+                      <td><h5 class="text-white mb-0">To</h5></td>
+                      <td><input type="text" class="form-control" id="end_date_p5"></td>
+                      <td>
+                        <button type="button" class="btn btn-success"id="submit-p5" name="submit"> Submit </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- End date range filter -->
+              </div>
             </div>
               <div class="card-body">
+                <div id="linechart_Phase5" class="display mb-5 p-3 border border-dark border-5 rounded-6" ><h1 id="dataP5" class="text-center"></h1></div>
+                <a type="button" class="btn btn-success mb-3 Export5">
+                  <i class="fa fa-file-excel me-2"></i><span>generate excel</span>
+                </a>
                   <div class="row">
-                              <table class="display table align-middle mb-0 bg-white " id="P9">
-                                  <thead class="bg-light">
-                                    <tr>
-                                      <th>Date</th>
-                                      <th>Time</th>
-                                      <th>Machine</th>
-                                      <th>StatusDIWater</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {% for P9 in P9 %}
-                                    <tr>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P9['Date'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P9['Time'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p class="text-muted mb-0">{{ P9['Site'] }}</p>
-                                      </td>
-                                      <td>
-                                        <p name="{{ P9['Site'] }}" class="mb-0 Status{{ P9['Site'] }}">Pass</p>
-                                        <input type="hidden" name="data{{ P9['Site'] }}"  value="{{ P9['Water'] }}">
-                                      </td>
-                                    </tr>
-                                    {% endfor %}
-                                  </tbody>
-                                </table>
-                    </div>
+                    <table class="display table align-middle mb-0 bg-white" id="P5">
+                        <thead class="bg-light">
+                          <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Site</th>
+                            <th>StatusDIWater</th>
+                            <th>Water (MΩ)</th>
+                            <th>Temp (°C)</th>
+                          </tr>
+                        </thead>
+                    </table>
+                  </div>
+              </div>
+          </div>
+          <div class="card mt-3">
+            <div class="card-header bg-dark bg-gradient text-white d-flex justify-content-between">
+              <h5 class="col-lg-3">Phase9</h5>
+              <div class="col-lg-9 d-flex justify-content-lg-end ">
+                <!-- date range filter -->
+                <table cellspacing="5" cellpadding="5">
+                  <tbody>
+                    <tr >
+                      <td><h5 class="text-white mb-0">Choose Date :</h5></td>
+                      <td><input type="text" class="form-control" id="start_date_p9"></td>
+                      <td><h5 class="text-white mb-0">To</h5></td>
+                      <td><input type="text" class="form-control" id="end_date_p9"></td>
+                      <td>
+                        <button type="button" class="btn btn-success"id="submit-p9" name="submit"> Submit </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- End date range filter -->
+              </div>
+            </div>
+              <div class="card-body">
+                <div id="linechart_Phase9" class="display mb-5 p-3 border border-dark border-5 rounded-6" ></div>
+                <a type="button" class="btn btn-success mb-3 Export9" >
+                  <i class="fa fa-file-excel me-2"></i><span>generate excel</span>
+                </a>
+                  <div class="row">
+                    <table class="display table align-middle mb-0 bg-white " id="P9">
+                        <thead class="bg-light">
+                          <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Site</th>
+                            <th>StatusDIWater</th>
+                            <th>Water (MΩ)</th>
+                            <th>Temp (°C)</th>
+                          </tr>
+                        </thead>
+                    </table>
+                  </div>
               </div>
           </div>
     </div>
   
 {% endblock %}
 {% block script %}
-<script src="{{ url_for('static', filename='js/trend-di.js') }}"></script>
 <script>
-  {% for P4script in P4 %}
-  if ($( 'input[name="data{{ P4script['Site'] }}"]' ).val() > 12){
-    $('p[name="{{ P4script['Site'] }}"]').text("Pass");
-    $('p[name="{{ P4script['Site'] }}"]').addClass("text-success");
-  } else if ((10 <= $( 'input[name="data{{ P4script['Site'] }}"]' ).val()) && ($( 'input[name="data{{ P4script['Site'] }}"]' ).val() < 12)) {
-    $('p[name="{{ P4script['Site'] }}"]').text("Monitor");
-    $('p[name="{{ P4script['Site'] }}"]').addClass("text-warning");
-  } else if ($('input[name="data{{ P4script['Site'] }}"]' ).val() < 10) {
-    $('p[name="{{ P4script['Site'] }}"]').text("Error");
-    $('p[name="{{ P4script['Site'] }}"]').addClass("text-danger");
-  }
-  {% endfor %}
+  $( ".Export4" ).click(function() {
+    window.location.href="export_trend?phase=4";
+    //window.open("export_trend?phase=4", "_blank", 
+    //"toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=300,width=800,height=500");
+  })
+  $( ".Export5" ).click(function() {
+    window.location.href="export_trend?phase=5";
+    //window.open("export_trend?phase=5", "_blank", 
+    //"toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=300,width=800,height=500");
+  })
+  $( ".Export9" ).click(function() {
+    window.location.href="export_trend?phase=9";
+    //window.open("", "_blank", 
+    //"toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=300,width=800,height=500");
+  })
 </script>
 <script>
-  {% for P5script in P5 %}
-  if ($( 'input[name="data{{ P5script['Site'] }}"]' ).val() > 12){
-    $('p[name="{{ P5script['Site'] }}"]').text("Pass");
-    $('p[name="{{ P5script['Site'] }}"]').addClass("text-success");
-  } else if ((10 < $( 'input[name="data{{ P5script['Site'] }}"]' ).val()) && ($( 'input[name="data{{ P5script['Site'] }}"]' ).val() < 12)) {
-    $('p[name="{{ P5script['Site'] }}"]').text("Monitor");
-    $('p[name="{{ P5script['Site'] }}"]').addClass("text-warning");
-  } else if ($('input[name="data{{ P5script['Site'] }}"]' ).val() < 10) {
-    $('p[name="{{ P5script['Site'] }}"]').text("Error");
-    $('p[name="{{ P5script['Site'] }}"]').addClass("text-danger");
-  }
-  {% endfor %}
+  $(document).ready(function () {
+
+    var st_date_p4 = '';
+    var end_date_p4 = '';
+
+    $("#start_date_p4").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      st_date_p4 = dateStr;
+          console.log(dateStr);
+      },
+    })
+  $("#end_date_p4").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      end_date_p4 = dateStr;
+          console.log(dateStr);
+      },
+    })
+
+    var data_table = $("#P4").DataTable({
+      processing: true,
+      serverSide: true,
+      serverMethod: "post",
+      ajax: {
+        url: "/data_di_P4",
+        data: function(d){
+          d.startdate = st_date_p4,
+          d.enddate = end_date_p4
+        }
+      },
+      lengthMenu: [
+        [5, 20, 30, 40, 50, {{totalRecords}}], 
+        [5, 20, 30, 40, 50, 'All']
+      ],
+      searching: true,
+      sort: false,
+      createdRow: function (row, data, index) {
+        if (data.Water >= 12) {
+          $("td", row).eq(3).removeClass("text-danger");
+          $("td", row).eq(3).removeClass("text-warning");
+          $("td", row).eq(3).addClass("text-success");
+          $("td", row).eq(3).text("Normal");
+        } else if (10 < data.Water && data.Water < 12){
+          $("td", row).eq(3).removeClass("text-success");
+          $("td", row).eq(3).removeClass("text-danger");
+          $("td", row).eq(3).addClass("text-warning");
+          $("td", row).eq(3).text("Monitor");
+        } else if (data.Water <= 10){
+          $("td", row).eq(3).removeClass("text-success");
+          $("td", row).eq(3).removeClass("text-warning");
+          $("td", row).eq(3).addClass("text-danger");
+          $("td", row).eq(3).text("Low");
+        }
+      },
+      columns: [
+        { data: "Date" },
+        { data: "Time" },
+        { data: "Site" },
+        { data: "Water" },
+        { data: "Water" },
+        { data: "Temp" },
+      ],
+      columnDefs: [
+        {
+          targets: 0,
+          render: function (data, type, row, meta) {
+            return moment.utc(data).local().format("YYYY-MM-DD");
+          },
+        },
+      ]
+    });
+    $("#submit-p4").on("click", function () {
+      data_table.ajax.reload();
+    });
+  });
 </script>
 <script>
-  {% for P9script in P9 %}
-  if ($( 'input[name="data{{ P9script['Site'] }}"]' ).val() >= 12){
-    $('p[name="{{ P9script['Site'] }}"]').text("Pass");
-    $('p[name="{{ P9script['Site'] }}"]').addClass("text-success");
-  } else if ((10 <= $( 'input[name="data{{ P9script['Site'] }}"]' ).val()) && ($( 'input[name="data{{ P9script['Site'] }}"]' ).val() < 12)) {
-    $('p[name="{{ P9script['Site'] }}"]').text("Monitor");
-    $('p[name="{{ P9script['Site'] }}"]').addClass("text-warning");
-  } else if ($('input[name="data{{ P9script['Site'] }}"]' ).val() < 10) {
-    $('p[name="{{ P9script['Site'] }}"]').text("Error");
-    $('p[name="{{ P9script['Site'] }}"]').addClass("text-danger");
-  }
-  {% endfor %}
+  $(document).ready(function () {
+    var st_date_p5 = '';
+    var end_date_p5 = '';
+
+    $("#start_date_p5").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      st_date_p5 = dateStr;
+          console.log(dateStr);
+      },
+    })
+  $("#end_date_p5").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      end_date_p5 = dateStr;
+          console.log(dateStr);
+      },
+    })
+
+    var data_table = $("#P5").DataTable({
+      processing: true,
+      serverSide: true,
+      serverMethod: "post",
+      ajax: {
+        url: "/data_di_P5",
+        data: function(d){
+          d.startdate = st_date_p5,
+          d.enddate = end_date_p5
+        }
+      },
+      lengthMenu: [
+        [5, 20, 30, 40, 50, -1], 
+        [5, 20, 30, 40, 50, 'All']
+      ],
+      searching: true,
+      sort: false,
+      serverSide: true,
+      createdRow: function (row, data, index) {
+        if (data.Water >= 12) {
+          $("td", row).eq(3).removeClass("text-danger");
+          $("td", row).eq(3).removeClass("text-warning");
+          $("td", row).eq(3).addClass("text-success");
+          $("td", row).eq(3).text("Normal");
+        } else if (10 < data.Water && data.Water < 12){
+          $("td", row).eq(3).removeClass("text-success");
+          $("td", row).eq(3).removeClass("text-danger");
+          $("td", row).eq(3).addClass("text-warning");
+          $("td", row).eq(3).text("Monitor");
+        } else if (data.Water <= 10){
+          $("td", row).eq(3).removeClass("text-success");
+          $("td", row).eq(3).removeClass("text-warning");
+          $("td", row).eq(3).addClass("text-danger");
+          $("td", row).eq(3).text("Low");
+        }
+      },
+      columns: [
+        { data: "Date" },
+        { data: "Time" },
+        { data: "Site" },
+        { data: "Water" },
+        { data: "Water" },
+        { data: "Temp" },
+      ],
+      columnDefs: [
+        {
+          targets: 0,
+          render: function (data, type, row, meta) {
+            return moment.utc(data).local().format("YYYY-MM-DD");
+          },
+        },
+      ]
+    });
+    $("#submit-p5").on("click", function () {
+      data_table.ajax.reload();
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    var st_date_p9 = '';
+    var end_date_p9 = '';
+
+    $("#start_date_p9").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      st_date_p9 = dateStr;
+          console.log(dateStr);
+      },
+    })
+    $("#end_date_p9").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      end_date_p9 = dateStr;
+          console.log(dateStr);
+      },
+    })
+
+    var data_table = $("#P9").DataTable({
+      processing: true,
+      serverSide: true,
+      serverMethod: "post",
+      ajax: {
+        url: "/data_di_P9",
+        data: function(d){
+          d.startdate = st_date_p9,
+          d.enddate = end_date_p9
+        }
+      },
+      lengthMenu: [
+        [5, 20, 30, 40, 50, -1], 
+        [5, 20, 30, 40, 50, 'All']
+      ],
+      searching: true,
+      sort: false,
+      serverSide: true,
+      createdRow: function (row, data, index) {
+        if (data.Water >= 12) {
+          $("td", row).eq(3).removeClass("text-danger");
+          $("td", row).eq(3).removeClass("text-warning");
+          $("td", row).eq(3).addClass("text-success");
+          $("td", row).eq(3).text("Normal");
+        } else if (10 < data.Water && data.Water < 12){
+          $("td", row).eq(3).removeClass("text-success");
+          $("td", row).eq(3).removeClass("text-danger");
+          $("td", row).eq(3).addClass("text-warning");
+          $("td", row).eq(3).text("Monitor");
+        } else if (data.Water <= 10){
+          $("td", row).eq(3).removeClass("text-success");
+          $("td", row).eq(3).removeClass("text-warning");
+          $("td", row).eq(3).addClass("text-danger");
+          $("td", row).eq(3).text("Low");
+        }
+      },
+      columns: [
+        { data: "Date" },
+        { data: "Time" },
+        { data: "Site" },
+        { data: "Water" },
+        { data: "Water" },
+        { data: "Temp" },
+      ],
+      //dom: 'Blfrtip',
+      //buttons: [
+      //  {
+      //    extend: 'excel',
+      //    text: '<i class="fa fa-file-excel me-2"></i><span>generate excel</span>',
+      //    className: 'mb-3 btn btn-success me-1',
+      //    exportOptions: {
+      //      modifier: {
+      //          page: 'all'
+      //      }
+      //    }
+      //  },
+      //  {
+      //      extend: 'pdf',
+      //      text: '<i class="fa fa-file-pdf me-2"></i><span>generate PDF</span>',
+      //      className: 'mb-3 btn btn-danger me-1',
+      //  }
+      //],
+      columnDefs: [
+        {
+          targets: 0,
+          render: function (data, type, row, meta) {
+            return moment.utc(data).local().format("YYYY-MM-DD");
+          },
+        },
+      ]
+    });
+    $("#submit-p9").on("click", function () {
+      data_table.ajax.reload();
+    });
+  });
 </script>
 {% endblock %}

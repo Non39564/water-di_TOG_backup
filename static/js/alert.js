@@ -1,20 +1,23 @@
+function convert_timestamp() {
+    
+  const date = new Date();
+  //const datetime = (date.getFullYear() + ('00' + (date.getMonth() + 1)).slice(-2) + ('00' + date.getDate()).slice(-2) + ('00' + date.getHours()).slice(-2) + ('00' + date.getMinutes()).slice(-2) + ('00' + date.getSeconds()).slice(-2));
+  const datetime = ('00' + date.getDate()).slice(-2) + "/" + ('00' + (date.getMonth() + 1)).slice(-2) + (date.getFullYear() + " " +  ('00' + date.getHours()).slice(-2) + ":" +  ('00' + date.getMinutes()).slice(-2) + ":" +  ('00' + date.getSeconds()).slice(-2));
+  const dates = date.getFullYear() + ('00' + (date.getMonth() + 1)).slice(-2) + ('00' + date.getDate()).slice(-2) ;
+  const time = ('00' + date.getHours()).slice(-2) + ":" + ('00' + date.getMinutes()).slice(-2) + ":" + ('00' + date.getSeconds()).slice(-2) ;
+  const time_dummy = ('00' + date.getHours()).slice(-2) ;
+  const time_code = ('00' + date.getHours()).slice(-2) + ":" + "00" + ":" + "00";
+  
+  return [datetime,dates,time,time_code,time_dummy];
+}
+
 function alert() {
   $.getJSON("/dataapi").done(function (json) {
     var toastLiveExample = document.getElementById("liveToast");
     for (i in json) {
-      const d = new Date();
-      const day = d.getDate();
-      const month = d.getMonth() + 1;
-      const year = d.getFullYear();
-      const h = d.getHours();
-      const m = d.getMinutes();
-      if (m < 10) {
-        const m = "0" + m;
-        console.log(m);
-      }
       const erroralert = [];
       for (j in json[i].Data) {
-        if (json[i].Data[j].Water < 0) {
+        if (json[i].Data[j].Water < 10) {
           var toast = new bootstrap.Toast(toastLiveExample);
           var macName = json[i].Data[j].id;
           erroralert.push(macName);
@@ -24,7 +27,7 @@ function alert() {
         document.getElementById("AlertId").innerHTML =
           "Di Error<br> " + erroralert.join(" <br> ");
         document.getElementById("timealert").innerHTML =
-          day + "/" + month + "/" + year + "          " + h + ":" + m;
+          convert_timestamp()[0];
         toast.show();
       }
     }

@@ -153,7 +153,7 @@
         var machine = slot[Machine.val()];
 
         for (var key in machine) {
-          $('select').find('option[value="' + machine[key] +'"]').prop('disabled', true);
+          $('select').find('option[value="' + machine[key] +'"]')
         }
 
         var water_select = document.getElementById(Water);

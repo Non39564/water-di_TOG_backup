@@ -2,4 +2,8 @@
 setTimeout(function(){
     self.close();
 },2000);
+window.onunload = refreshParent;
+function refreshParent() {
+  window.opener.location.reload();
+}
 </script>

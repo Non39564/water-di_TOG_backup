@@ -45,27 +45,27 @@
             <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
               <form action="{{ url_for('login') }}" method='POST' enctype=multipart/form-data>
                 <!-- Name input -->
-                <div class="form-outline mb-4">
-                  <input type="text" id="registerName" name="registerName" class="form-control border-bottom border-4 rounded-0" />
-                  <label class="form-label" for="registerName">Name</label>
+                <div class="form-group col-sm-12">
+                  <label class="form-label mb-0" for="registerName">Name</label>
+                  <input type="text" id="registerName" name="registerName" class="form-control" />
                 </div>
 
                 <!-- Username input -->
-                <div class="form-outline mb-4">
-                  <input type="text" id="registerUsername" name="registerUsername" class="form-control border-bottom border-4 rounded-0" />
-                  <label class="form-label" for="registerUsername">Username</label>
+                <div class="form-group col-sm-12">
+                  <label class="form-label mb-0" for="registerUsername">Username</label>
+                  <input type="text" id="registerUsername" name="registerUsername" class="form-control" />
                 </div>
 
                 <!-- Password input -->
-                <div class="form-outline mb-4">
-                  <input type="password" id="registerPassword" name="registerPassword" class="form-control border-bottom border-4 rounded-0" />
-                  <label class="form-label" for="registerPassword">Password</label>
+                <div class="form-group col-sm-12">
+                  <label class="form-label mb-0" for="registerPassword">Password</label>
+                  <input type="password" id="registerPassword" name="registerPassword" class="form-control" />
                 </div>
 
                 <!-- Repeat Password input -->
-                <div class="form-outline mb-4">
-                  <input type="password" id="registerRepeatPassword" name="registerRepeatPassword" class="form-control border-bottom border-4 rounded-0" />
-                  <label class="form-label" for="registerRepeatPassword">Repeat password</label>
+                <label class="form-label mb-0" for="registerRepeatPassword">Repeat password</label>
+                <div class="form-group col-sm-12">
+                  <input type="password" id="registerRepeatPassword" name="registerRepeatPassword" class="form-control" />
                   <span id='message'></span>
                 </div>
                 <!-- select department -->
@@ -80,10 +80,23 @@
                       </select>
                   </div>
                   <div class="form-group col-sm-6">
+                    <label class="form-label mb-0" for="Position">Position</label>
+                    <input type="text" id="Position" name="Position" class="form-control " />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label class="form-label mb-0" for="PhoneNumber">PhoneNumber</label>
+                    <input type="text" id="PhoneNumber" name="PhoneNumber" class="form-control " />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label class="form-label mb-0" for="Email">E-mail</label>
+                    <input type="text" id="Email" name="Email" class="form-control " />
+                  </div>
+                  <div class="form-group col-sm-12">
                     <label>Upload Signature</label>
                     <input type="file" class="form-control" id="file" name="file" />
                   </div>
                 </div>
+
                 <!-- Submit button -->
                 <button type="submit" value="register" name="check" class="btn btn-primary btn-block mb-3">Sign up</button>
               </form>

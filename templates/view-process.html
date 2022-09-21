@@ -1,0 +1,108 @@
+{% extends 'layout.html' %} {% block title %}View-Process{% endblock %} {% block
+head %}
+<!-- DataTable script -->
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-3.5.1.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"
+></script>
+<!-- DataTable css -->
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"
+/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css"
+/>
+{% endblock %} {% block content %}
+<div class="card">
+  <div
+    class="card-header d-flex justify-content-between bg-dark bg-gradient text-white"
+  >
+    View Process
+  </div>
+  <div class="card-body">
+    <form>
+    <table class="table" id="view-process">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
+          <th scope="col">OP</th>
+          <th scope="col">Phase</th>
+          <th scope="col">Site</th>
+          <th scope="col">Status</th>
+          <th scope="col">Di Water</th>
+          {% if Access == "True" %}<th scope="col">Edit Request</th>{% endif %}
+          <th scope="col">Process Status</th>
+          <th scope="col">State</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for main in maintain %}
+        <tr>
+          <td>{{ main['Date'] }}</td>
+          <td>{{ main['Time'] }}</td>
+          <td>{{ main['OP'] }}</td>
+          <td>{{ main['Phase'] }}</td>
+          <td>{{ main['Site'] }}</td>
+          <td id="{{ main['Site'] }}">{{ main['Status_Di'] }}</td>
+          <td>{{ main['Water'] }}</td>
+          {% if Access == "True" %}<td>
+            <button value="{{ main['Site'] }}" name="Edit" id="Edit" type="button" class="btn btn-primary Edit">
+              Edit
+            </button>
+          </td>
+          {% endif %}
+          <td><button value="{{ main['Site'] }}" name="show" type="button" class="btn btn-primary Show">Data</button></td>
+          <td id="de{{ main['Site'] }}">{{ main['Detail'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block script %}
+<script>
+  $(document).ready(function () {
+    $("#view-process").DataTable({});
+  });
+</script>
+<script>
+  {% for mainsc in maintain %}
+  if ("{{ mainsc['Status_Di'] }}" === "M"){
+    $("#{{ mainsc['Site'] }}").text("Monitor");
+  } else if ("{{ mainsc['Status_Di'] }}" === "L"){
+    $("#{{ mainsc['Site'] }}").text("Low");
+  } else if ("{{ mainsc['Status_Di'] }}" === "E"){
+    $("#{{ mainsc['Site'] }}").text("Error");
+  }
+  {% endfor %}
+</script>
+<script>
+$( ".Edit" ).click(function() {
+  window.open("edit_maintain?edit_maintain=" + $(this).val(), "_blank", 
+  "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=300,width=800,height=500");
+  console.log($(this).val())
+})
+$( ".Show" ).click(function() {
+  window.open("popup-process?show=" + $(this).val(), "_blank", 
+  "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=300,width=800,height=500");
+})
+</script>
+{% endblock %}

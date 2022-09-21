@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block title %}Timeline{% endblock %}
+{% block head %}
+<link
+      href="{{ url_for('static', filename='css/timeline-doc.css') }}"
+      rel="stylesheet"
+    />
+{% endblock %}
+{% block content %}
+<div class="card mt-3">
+    <div class="card-header bg-dark bg-gradient text-white">Timeline</div>
+    <div class="card-body">
+      <div class="row ">
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="event-date badge bg-info" id="date-Sent">2 June</div>
+        </div>
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="event-date badge bg-success" id="date-Received">5 June</div>
+        </div>
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="event-date badge bg-danger" id="date-InProgress">7 June</div>
+        </div>
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="event-date badge bg-warning" id="date-Done">8 June</div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-3 border-top border-info border-3  text-center mt-2" id="timeline-Sent">
+          <i class="fas fa-tenge text-info mt-2" id="icon-Sent"></i>
+          <h5 class="pt-2" id="Sent">ส่งเอกสารแล้ว</h5>
+        </div>
+        <div class="col-3 border-top border-success border-3 text-center mt-2" id="timeline-Received">
+          <i class="fas fa-tenge text-success mt-2" id="icon-Received"></i>
+          <h5 class="pt-2" id="Received">ได้รับเอกสารแล้ว</h5>
+        </div>
+        <div class="col-3 border-top border-danger border-3 text-center mt-2" id="timeline-InProgress">
+          <i class="fas fa-tenge text-danger mt-2" id="icon-InProgress"></i>
+          <h5 class="pt-2" id="InProgress">กำลังดำเนินการ</h5>
+        </div>
+        <div class="col-3 border-top border-warning border-3 text-center mt-2" id="timeline-Done">
+          <i class="fas fa-tenge text-warning mt-2" id="icon-Done"></i>
+          <h5 class="pt-2" id="Done">เสร็จสิ้นการดำเนินการ</h5>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}
+

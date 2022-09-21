@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block title %}Request-document{% endblock %}
+{% block head %}
+<!-- DataTable -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+{% endblock %}
+{% block content %}
+<div class="card" >
+    <div class="card-header bg-dark bg-gradient text-white">ส่งแล้ว</div>
+    <div class="card-body">
+        <table class="table" id="request-timeline" >
+            <thead>
+                <tr>
+                    <th>วันที่</th>
+                    <th>เรื่อง</th>
+                    <th>ผู้รับผิดชอบ</th>
+                    <th>สถานะ</th>
+                    <th>ดูเพิ่มเติม</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Timeline in Select_Timeline%}
+                <tr>
+                    <td>{{ Timeline['date_getWork'] }}</td>
+                    <td>{{ Timeline['service'] }}</td>
+                    <td>{{ Timeline['Name'] }}</td>
+                    <td>{{ Timeline['Status'] }}</td>
+                    <td>
+                        <button onclick="window.open('/confirm_request?KeyWork={{ Timeline['KeyWork'] }}', '_blank');" name="Edit" type="button" class="btn btn-link btn-sm text-bg-primary Edit">
+                            view Timeline
+                        </button>
+                    </td>  
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready( function () {
+    $('#request-timeline').DataTable({
+        pagingType: 'full_numbers',
+        scrollY: '500px',
+        scrollCollapse: true,
+        pageLength: 10,
+        order: [[0, 'desc']],
+        lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
+        responsive: true
+    });
+} );
+</script>
+{% endblock %}

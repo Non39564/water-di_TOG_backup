@@ -1,98 +1,196 @@
-{% extends 'layout.html' %}
-{% block title %}Alert{% endblock %}
-{% block head %}
+{% extends 'layout.html' %} {% block title %}Alert{% endblock %} {% block head
+%}
+<link
+      type="text/css"
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/colors.css') }}"
+    />
 <!-- DataTable script -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-3.5.1.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"
+></script>
 <!-- DataTable css -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css" />
-<!-- Include Date Range Picker -->
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"
+/>
 <!-- script pagination -->
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-{% endblock %}
-{% block content %}
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"
+></script>
+
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/plug-ins/1.12.1/dataRender/datetime.js"
+></script>
+
+<!-- flatpicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+{% endblock %} {% block content %}
 <div class="card mt-3">
-  <div class="card-header  bg-danger bg-gradient text-white">
+  <div class="card-header bg-danger bg-gradient text-white ">
     <div class="row justify-content-lg-end">
-      <div class="col-lg-5">
-        <h5>Alert status</h5>
+      <div class="col-lg-3">
+        <h4>Alert status</h4>
       </div>
-      <div class="col-lg-7 d-flex justify-content-lg-end ">
+      <div class="col-lg-9 d-flex justify-content-lg-end">
         <!-- date range filter -->
         <table cellspacing="5" cellpadding="5">
           <tbody>
             <tr >
-              <td><h5>Choose Date :</h5></td>
-              <td><input type="text" class="form-control" id="min" name="min"></td>
-              <td><h5>To</h5></td>
-              <td><input type="text" class="form-control" id="max" name="max"></td>
+              <td><h5 class="text-white mb-0">Choose Date :</h5></td>
+              <td><input type="text" class="form-control" id="pickadate_start" /></td>
+              <td><h5 class="text-white mb-0">To</h5></td>
+              <td><input type="text" class="form-control" id="pickadate_end" /></td>
+              <td>
+                <button type="button" class="btn btn-success"id="submit" name="submit"> Submit </button>
+              </td>
             </tr>
           </tbody>
         </table>
       <!-- End date range filter -->
-    </div>
+      </div>
     </div>
   </div>
-    <div class="card-body">
-      <table class="display table align-middle mb-0 bg-white" id="alert">
-        <thead class="bg-light">
-          <tr>
-            <th>Station</th>
-            <th>Phase</th>
-            <th>Machine</th>
-            <th>Detail</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for error in report %}
-          <tr>
-            <td>
-              <p class="text-muted mb-0">{{ error['Station'] }}</p>
-            </td>
-            <td>
-              <p class="text-muted mb-0">{{ error['Phase'] }}</p>
-            </td>
-            <td>
-              <p class="text-muted mb-0">{{ error['Site'] }}</p>
-            </td>
-            <td name="{{ error['Detail'] }}">
-              <p id="{{ error['Detail'] }}" name="{{ error['Detail'] }}" class="mb-0 Status{{ error['Detail'] }}">{{ error['Detail'] }}</p>
-            </td>
-            <td>
-              <p class="text-muted mb-0 ">{{ error['Date'] }}</p>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      
-    </div>
+  <div class="card-body">
+    <a type="button" class="btn btn-success mb-3" href='/export_alert'>
+      <i class="fa fa-file-excel me-2"></i><span>generate excel</span>
+    </a>
+    <table class="display dataTable " id="alert">
+      <thead class="bg-light">
+        <tr>
+          <th>DateTime</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Station</th>
+          <th>Phase</th>
+          <th>Site</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
 </div>
-{% endblock %}
-{% block script %}
-<script src="{{ url_for('static', filename='js/date-range-alert.js') }}"></script>
+{% endblock %} {% block script %}
+
 <script>
-  {% for error_script in report %}
-  console.log("{{ error_script['Detail'] }}")
-  if ("{{ error_script['Detail'] }}" === "Normal"){
-    $('p[name="{{ error_script['Detail'] }}"]').addClass("text-success");
-  } else if ("{{ error_script['Detail'] }}" === "Low") {
-    $('p[name="{{ error_script['Detail'] }}"]').text("Low");
-    $('p[name="{{ error_script['Detail'] }}"]').addClass("text-warning");
-  } else if ("{{ error_script['Detail'] }}" === "High") {
-    $('p[name="{{ error_script['Detail'] }}"]').text("Error");
-    $('p[name="{{ error_script['Detail'] }}"]').addClass("text-danger");
-  }
-  {% endfor %}
+
+ $(document).ready(function() {
+
+  var st_date = '';
+  var end_date = '';
+
+  $("#pickadate_start").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      st_date = dateStr;
+          console.log(dateStr);
+      },
+    })
+  $("#pickadate_end").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      end_date = dateStr;
+          console.log(dateStr);
+      },
+    })
+
+    var Alert_table = $("#alert").DataTable({
+      processing: true,
+      serverSide: true,
+      serverMethod: "post",
+      ajax: {
+        url: "/data_alert",
+        data: function(d){
+          d.startdate = st_date,
+          d.enddate = end_date
+        }
+      },
+      lengthMenu: [
+        [10, 20, 30, 40, 50, -1], 
+        [10, 20, 30, 40, 50, 'All']
+      ],
+      searching: true,
+      sort: false,
+      createdRow: function (row, data, index) {
+        if (data.Detail === "Error") {
+          $("td", row).eq(5).removeClass("text-warning");
+          $("td", row).eq(5).removeClass("text-yellow");
+          $("td", row).eq(5).addClass("text-danger");
+        } else if (data.Detail === "Monitor") {
+          $("td", row).eq(5).removeClass("text-danger");
+          $("td", row).eq(5).removeClass("text-warning");
+          $("td", row).eq(5).addClass("text-yellow");
+        } else if (data.Detail === "Low") {
+          $("td", row).eq(5).removeClass("text-danger");
+          $("td", row).eq(5).removeClass("text-yellow");
+          $("td", row).eq(5).addClass("text-warning");
+        }
+      },
+      columns: [
+        { data: "Date_Time" },
+        { data: "Date" },
+        { data: "Time" },
+        { data: "Station" },
+        { data: "Phase" },
+        { data: "Site" },
+        { data: "Detail" },
+      ],
+      columnDefs: [
+        {
+          targets: 0,
+          visible: false,
+          searchable: false,
+          render: function (data, type, row, meta) {
+            return moment.utc(data).local().format("YYYY-MM-DD hh:mm:ss");
+          },
+        },
+        {
+          targets: 1,
+          visible: true,
+          searchable: false,
+          render: function (data, type, row, meta) {
+            return moment.utc(data).local().format("YYYY-MM-DD");
+          },
+        },
+        
+      ]
+    });
+
+    $("#submit").on("click", function () {
+      Alert_table.ajax.reload();
+    });
+  
+ });
+  
 </script>
+
 {% endblock %}

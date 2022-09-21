@@ -12,12 +12,13 @@ msg = MIMEMultipart()
 msg['From'] = fromaddr
 msg['To'] = toaddr
 
-def email():
-    msg['Subject'] = "Subject of the Mail"
-    body = "Body_of_the_mail"
+def email(Name, Service, Finish):
+    print(Finish)
+    msg['Subject'] = f"ส่งคำร้องขอเรื่อง {Service}"
+    body = f"คุณ {Name} ส่งคำร้องขอใช้งานเรื่อง {Service} ให้เสร็จสิ้นภายในวันที่ {Finish}"
     msg.attach(MIMEText(body, 'plain'))
-    filename = "Application_form.xls"
-    attachment = open("FM-1430-006 ใบขอใช้บริการคอมพิวเตอร์ 01-04-65.xls", "rb")
+    filename = "forIT.docx"
+    attachment = open("./static/document/แบบคำขอใช้งานส่งไอที.docx", "rb")
     p = MIMEBase('application', 'octet-stream')
     p.set_payload((attachment).read())
     encoders.encode_base64(p)

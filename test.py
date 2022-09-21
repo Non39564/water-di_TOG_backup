@@ -1,10 +1,9 @@
-
-import pymysql
+import pymysql, base64, itertools
 
 def getConnection():
     return pymysql.connect(
         host='localhost',
-        db='water_di',
+        db='water_test',
         user='root',
         password='',
         charset='utf8',
@@ -62,12 +61,3 @@ def getConnection():
 #     print ("Something went wrong….",ex)
 
 #############################################################################################################
-
-def convertToBinaryData(filename):
-    # Convert digital data to binary format
-    with open(filename, 'rb') as file:
-        binaryData = file.read()
-    # return binaryData
-    print(binaryData)
-    
-convertToBinaryData("./static/signature/Dullahan.png")

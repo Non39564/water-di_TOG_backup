@@ -1,0 +1,95 @@
+<html>
+<head>
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+    crossorigin="anonymous"
+      />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Notifications -->
+    <link
+      href="{{ url_for('static', filename='css/notification.css') }}"
+      rel="stylesheet"
+    />
+    <!-- scrollbar -->
+    <link
+      href="{{ url_for('static', filename='css/tableScroll.css') }}"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.js"
+    ></script>
+    <!-- script pagination -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <!-- css pagination -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+</head>
+<body>
+  <div class="row">
+    <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="card">
+          <form action="{{ url_for('edit_maintain_value') }}" method='POST'>
+          {% for aj in edit %}
+          <div class="card-header bg-primary bg-gradient text-white">Acknowledge {{aj['Site']}}</div>
+          <input type="hidden" id="Site" name="Site" value="{{ aj['Site'] }}"> </input>
+          {% endfor %}
+            {% for i in longname %}
+            <div class="card-body">
+              <div class="col-sm-3">
+                ชื่อ : 
+                <input class="border border-0 bg-white" disabled value="{{ i['Name'] }}"> </input>
+              </div>
+              <input type="hidden" id="name" name="name" value="{{ i['Name'] }}"> </input>
+              <div class="col-sm-6">แผนก : <input class="border border-0 bg-white" disabled value="{{ i['Department'] }}"></input></div>
+              <input type="hidden" id="department" name="department" value="{{ i['Department'] }}"></input>
+              <div class="col-sm-6">ตำแหน่ง :<input class="border border-0 bg-white" disabled value="{{ i['position'] }}"> </input></div>
+              <input type="hidden" id="position" name="position" value="{{ i['position'] }}"> </input>
+              <div class="col-sm-6">ฝ่าย/ส่วน :<input class="border border-0 bg-white" disabled value="{{ i['part'] }}"> </input></div>
+              <input type="hidden" id="part" name="part" value="{{ i['part'] }}"> </input>
+              <div class="col-sm">วันที่ :<input class="border border-0 bg-white" disabled value="{{ Date }}"> </input></div>
+              <input type="hidden" id="datefornow" name="datefornow" value="{{ Date }}"> </input>
+              <div class="col-sm">เวลา :<input class="border border-0 bg-white" disabled value="{{ Time }}"> </input></div>
+              <input type="hidden" id="timefornow" name="timefornow" value="{{ Time }}"> </input>
+              <div class="form-group col-sm-6">
+                <label for="Process">Process</label>
+                  <select id="Process" name="Process" class="form-control DP">
+                    <option value="0" selected>ยังไม่มีการดำเนินการ</option>
+                    <option value="1">ประสานงานติดต่อ Vender</option>
+                    <option value="2">รอจัดส่งถัง Resin</option>
+                    <option value="3">กำลัง ดำเนินการเปลี่ยนถัง</option>
+                    <option value="4">ดำเนินการเสร็จสิ้น</option>
+                  </select>
+              </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary mt-3 Edit">Edit</button>
+          </form>
+          </div>
+          </div>
+          <div class="col-md-3"></div>
+        </div>
+</body>
+</html>

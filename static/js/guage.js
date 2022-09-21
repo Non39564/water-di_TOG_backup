@@ -7,6 +7,18 @@ var time = end - start;
 
 function drawChart() {
 
+  // $.getJSON('/dataapi').done(function (json){
+  //   for (i in json){
+  //     var id = (json[i].Phase).replace(/ +/g, "").replace(/-/g, '')
+  //     var data = (json[i].Station+" "+json[i].Phase).replace(/ +/g, "").replace(/-/g, '')
+  //     $('#card-body').prepend($(`<div class="p-1 mb-2 bg-dark bg-gradient text-white">
+  //     <h2 class="text-center m-0" id="${id}"></h2>
+  //     </div>
+  //     <div id="${data}" class="display ${data} "></div>`));
+  //     $(`#${id}`).text(json[i].Station+" "+json[i].Phase)
+  //   }
+  // })
+
   function drawGauge() {
     $.getJSON('/dataapi').done(function (json){
 
@@ -22,19 +34,19 @@ function drawChart() {
       dataP9.addColumn('string', 'Label');
       dataP9.addColumn('number', 'Value');
 
-      document.getElementById("Phase4").innerHTML = json[0].Station+" "+json[0].Phase;
+      for (i in json){
+        var id = (json[i].Phase).replace(/ +/g, "").replace(/-/g, '')
+        $(`#${id}`).text(json[i].Station+" "+json[i].Phase)
+      }
+
       for (i in json[0].Data) {
         dataP4.addRow([json[0].Data[i].id, json[0].Data[i].Water])
       }
  
-
-      document.getElementById("Phase5").innerHTML = json[0].Station+" "+json[1].Phase;
       for (i in json[1].Data) {
         dataP5.addRow([json[1].Data[i].id, json[1].Data[i].Water]);
       }
 
-
-      document.getElementById("Phase9").innerHTML = json[0].Station+" "+json[2].Phase;
       for (i in json[2].Data) {
         dataP9.addRow([json[2].Data[i].id, json[2].Data[i].Water]);
       }
@@ -47,14 +59,15 @@ function drawChart() {
     });
   }
 
-  var chartP4 = new google.visualization.Gauge(document.getElementById('dataP4'));
-  var chartP5 = new google.visualization.Gauge(document.getElementById('dataP5'));
-  var chartP9 = new google.visualization.Gauge(document.getElementById('dataP9'));
+
+    var chartP4 = new google.visualization.Gauge(document.getElementById(`dataP4`));
+    var chartP5 = new google.visualization.Gauge(document.getElementById(`dataP5`));
+    var chartP9 = new google.visualization.Gauge(document.getElementById(`dataP9`));
 
   var options = {
-    redFrom: 0, redTo: 10, redColor: "FF3838" ,
-    yellowFrom: 20, yellowTo: 30, yellowColor: "FF3838",
-    greenFrom: 10, greenTo: 20,greenColor: "16F200",
+    redFrom: 0, redTo: 12, redColor: "FF6609" ,
+    yellowFrom: 12, yellowTo: 13, yellowColor: "FFE126",
+    greenFrom: 13, greenTo: 30,greenColor: "1BFA00",
     min: 0, max: 30,
     minorTicks: 0,
   };

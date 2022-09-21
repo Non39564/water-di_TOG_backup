@@ -58,3 +58,10 @@
  background:#ccc;
  border-radius:4px;
  } */
+
+ .link
+{
+   color:rgb(0, 0, 0);
+   text-decoration: none; 
+   background-color: none;
+}

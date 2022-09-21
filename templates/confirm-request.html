@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block title %}Confirm-Request{% endblock %}
+{% block head %}
+<link
+      href="{{ url_for('static', filename='css/timeline-doc.css') }}"
+      rel="stylesheet"
+    />
+<link
+      href="{{ url_for('static', filename='css/confirm-request.css') }}"
+      rel="stylesheet"
+    />
+{% endblock %}
+{% block content %}
+<div class="card mt-3">
+    <div class="card-header bg-dark bg-gradient text-white">Timeline</div>
+    <div class="card-body">
+      <div class="row mt-3">
+        <div class="col-3 border-top border-danger border-3  text-center mt-2" id="timeline-Sent">
+          <i class="fas fa-tenge text-danger mt-2" id="icon-Sent"></i>
+          <h5 class="pt-2" id="Sent">ส่งเอกสารแล้ว</h5>
+        </div>
+        <div class="col-3 border-top border-warning border-3 text-center mt-2" id="timeline-Received">
+          <i class="fas fa-tenge text-warning mt-2" id="icon-Received"></i>
+          <h5 class="pt-2" id="Received">ได้รับเอกสารแล้ว</h5>
+        </div>
+        <div class="col-3 border-top border-info border-3 text-center mt-2" id="timeline-InProgress">
+          <i class="fas fa-tenge text-info mt-2" id="icon-InProgress"></i>
+          <h5 class="pt-2" id="InProgress">กำลังดำเนินการ</h5>
+        </div>
+        <div class="col-3 border-top border-success border-3 text-center mt-2" id="timeline-Done">
+          <i class="fas fa-tenge text-success mt-2" id="icon-Done"></i>
+          <h5 class="pt-2" id="Done">เสร็จสิ้นการดำเนินการ</h5>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="card mt-3">
+    <div class="card-header bg-dark bg-gradient text-white">Confirm Document</div>
+    <div class="card-body">
+        <header class="d-flex justify-content-center text-dark">ใบขอใช้บริการระบบงานคอมพิวเตอร์</header>
+            <div class="row mt-4 mr-4 ">
+                {% for result in result %}
+                <div class="container px-4 ">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-md-7 border border-dark">
+                            <div class="row">
+                                <div class="col-sm-6">ผู้ขอ :<input disabled value="{{result['Name']}}"> </input></div>
+                                <div class="col-sm-6">เบอร์ติดต่อ :<input disabled value="{{result['Phone']}}"> </input></div>
+                                <div class="col-sm-6">ตำแหน่ง :<input disabled value="{{result['position']}}"> </input></div>
+                                <div class="col-sm-6">E-mail :<input disabled value="{{result['Email']}}"> </input></div>
+                                <div class="col-sm-6">แผนก :<input disabled value="{{result['Department']}}"> </input></div>
+                                <div class="col-sm-6">ฝ่าย/ส่วน :<input disabled value="{{result['part']}}"> </input></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 border border-dark">
+                            <div class="col-sm">วันที่ :<input disabled value="{{result['date']}}"> </input></div>
+                            <div class="col-sm">เวลา :<input disabled value="{{result['time']}}"> </input></div>
+                            <div class="col-sm">สถานที่ :<input disabled value="{{result['place']}}"> </input></div>
+                        </div>
+                    </div>
+                
+                <div class="row mt-5">
+                    ขอใช้บริการระบบ :<input disabled value="{{result['service']}}"></input>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mt-4 border border-dark d-flex justify-content-center">
+                        <a class="mt-1 mb-1 text-dark">สำหรับหน่วยงานที่ขอใช้บริการ (User)</a>
+                    </div>
+                    <div class="col-md-12 border border-dark border-top-0">
+                        <div class="row">
+                            <div class="col-sm-12">จุดประสงค์หรือเหตุผลในการขอใช้บริการระบบ : <input disabled value="{{result['reason']}}"></input></div>
+                            <div class="col-sm-12">ระบบที่ใช้อยู่ในปัจจุบัน : <input disabled value="{{result['system_now']}}"></input></div>
+                            <div class="col-sm-12">รายละเอียด : <input disabled value="{{result['detail']}}"></input></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 border border-dark border-top-0">
+                        <div class="row">
+                            <div class="col-sm-12">ระยะเวลาที่ต้องการให้แล้วเสร็จ : <input disabled value="{{result['date_end']}}"></input></div>
+                            <div class="col-sm-12">หมายเหตุ : <input disabled value="{{result['note']}}"></input></div>
+                            <input type="hidden" name="data" id="data" value="{{result['StatusID']}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}
+

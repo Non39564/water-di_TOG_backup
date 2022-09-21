@@ -1,59 +1,119 @@
 {% extends 'layout.html' %}
 {% block title %}Document{% endblock %}
 {% block head %}
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css'><link rel="stylesheet" href="./style.css">
 {% endblock %}
 {% block content %}
+{% if Access == "True" %}
 <div class="card mt-3">
-    <div class="card-header bg-dark bg-gradient text-white">Form</div>
+    <div class="card-header bg-dark bg-gradient text-white">ดำเนินการเรื่อง {{Work}}</div>
       <div class="card-body">
-          <form action="{{ url_for('addmachine') }}" method='POST'>
               <div class="row mb-4">
-                <div class="form-group col-md-4">
-                  <label for="MachineId">ชื่อ-นามสกุล ผู้ขอ</label>
-                  <input type="text" class="form-control" id="MachineId" name="MachineId" >
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="MachineIp">ตำแหน่ง</label>
-                  <input type="text" class="form-control" id="MachineIp" name="MachineIp">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="MachinePort">แผนก</label>
-                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="MachinePort">เบอร์ติอต่อ</label>
-                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="MachinePort">E-mail</label>
-                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="MachinePort">ฝ่าย/ส่วน</label>
-                  <input type="text" class="form-control" id="MachinePort" name="MachinePort">
-                </div>
-                <div class="form-outline datetimepicker">
-                    <input type="text" class="form-control" value="22/12/2020, 14:12:56" id="datetimepickerExample">
-                    <label for="datetimepickerExample" class="form-label">Select Date and Time</label>
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="inputOpMac">Station</label>
-                  <select id="inputOpMac" name="inputOpMac" class="form-control inputOP">
-                    <option value="" disabled selected>Choose Station</option>
-                    <!--<option value="OP2">2</option>-->
+              <form action="{{ url_for('update_doc_it') }}" method='POST'>
+                <div class="form-group col-md-6">
+                  <label for="cando">ความคิดเห็นเบื้องต้น/การดำเนินการ</label>
+                  <select id="cando" name="cando" class="form-control" required>
+                    <option value="สามารถดำเนินการได้ตามที่ร้องขอ">สามารถดำเนินการได้ตามที่ร้องขอ</option>
+                    <option value="ไม่สามารถดำเนินการได้">ไม่สามารถดำเนินการได้</option>
                   </select>
                 </div>
+                <div class="form-group col-md-12">
+                  <label for="system-effect">ผลกระทบที่เกิดขึ้นกับระบบ</label>
+                  <textarea class="form-control" id="system-effect" name="system-effect" rows="3" required></textarea>
+                </div>
+                <div class="form-group col-md-12">
+                  <label for="system-itdetail">รายละเอียด</label>
+                  <textarea class="form-control" id="itdetail" name="itdetail" rows="3" required></textarea>
+                </div>
                 <div class="form-group col-md-4">
-                  <label for="inputPhaseMac">Phase</label>
-                  <select id="inputPhaseMac" name="inputPhaseMac" class="form-control inputPhase">
-                    <option value="" disabled selected>Choose Phase</option>
-                    <!--<option value="OP2">2</option>-->
-                  </select>
+                    <label for="date_it_finish">วันที่เสร็จ :</label>
+                    <div class="input-group date" id="date_it_finish">
+                      <input class="form-control" placeholder="YYYY-MM-DD" id="date_finish" name="date_finish" required/><span class="input-group-append input-group-addon"><span class="input-group-text"><i class="fa fa-calendar"></i></span></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="date_it_deliver">วันที่ส่งมอบ :</label>
+                    <div class="input-group date" id="date_it_deliver">
+                      <input class="form-control" placeholder="YYYY-MM-DD" id="date_deliver" name="date_deliver" required/><span class="input-group-append input-group-addon"><span class="input-group-text"><i class="fa fa-calendar"></i></span></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="date_it_getWork">วันรับเรื่อง :</label>
+                    <div class="input-group date" id="date_it_getWork">
+                      <input class="form-control" placeholder="YYYY-MM-DD" id="date_get_work" name="date_get_work" required/><span class="input-group-append input-group-addon"><span class="input-group-text"><i class="fa fa-calendar"></i></span></span>
+                    </div>
+                </div>
+                <input type="hidden" value="{{Work_id}}" name="where" id="where">
+                <button type="submit" class="btn btn-primary">เสร็จสิ้น</button>
+              </form>
+              </div>
+              
+    </div>
+</div>
+{% else %}
+<div class="card mt-3">
+  <div class="card-header bg-dark bg-gradient text-white">ส่วนส่งเรื่องยื่นขอใช้งาน</div>
+    <div class="card-body">
+        <form action="{{ url_for('insertDoc') }}" method='POST'>
+            <div class="row mb-4">
+              <div class="form-group col-md-4">
+                <label>Date</label>
+                <div class="input-group date" id="date_now" name="date_now">
+                  <input class="form-control" placeholder="YYYY-MM-DD" id="datefornow" name="datefornow" required /><span class="input-group-append input-group-addon"><span class="input-group-text"><i class="fa fa-calendar"></i></span></span>
                 </div>
               </div>
-              <input type="hidden" value="machine" name="add">
-              <button type="submit" class="btn btn-primary">Add</button>
-          </form>
-      </div>
+              <div class="form-group col-md-4">
+                <label>Time</label>
+                <div class="input-group time" id="time_now" name="time_now">
+                  <input class="form-control" placeholder="HH:MM AM/PM" id="timefornow" name="timefornow" required/><span class="input-group-append input-group-addon"><span class="input-group-text"><i class="fa fa-clock"></i></span></span>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="place">สถานที่</label>
+                <input type="text" class="form-control" id="place" name="place" required>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="service">ขอใช้บริการระบบ</label>
+                <select id="service" name="service" class="form-control" required>
+                  <option value="ขอเพิ่มไอพีเครื่องอุปกรณ์">ขอเพิ่มไอพีเครื่องอุปกรณ์</option>
+                  <option value="ขอแก้ไขหน้าเว็บไซด์">ขอแก้ไขหน้าเว็บไซด์</option>
+                  <option value="อื่นๆ">อื่นๆ </option>
+                </select>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="reason">จุดประสงค์หรือเหตุผลในการขอใช้บริการระบบ :</label>
+                <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="system_now">ระบบที่ใช้อยู่ในปัจจุบัน :</label>
+                <textarea class="form-control" id="system_now" name="system_now" rows="3" required></textarea>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="detail">รายละเอียด :</label>
+                <textarea class="form-control" id="detail" name="detail" rows="3" required></textarea>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="date_end">ระยะเวลาที่ต้องการให้แล้วเสร็จ :</label>
+                <div class="input-group date" id="date_range_finish">
+                  <input class="form-control" placeholder="YYYY-MM-DD" id="date_end" name="date_end" required/><span class="input-group-append input-group-addon"><span class="input-group-text"><i class="fa fa-calendar"></i></span></span>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="note">หมายเหตุ :</label>
+                <textarea class="form-control" id="note" name="note" rows="2"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary fw-bold">ขอใช้งาน</button>
+        </form>
   </div>
+</div>
+{% endif %}
 {% endblock %}
+{% block script %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/eonasdan-bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js'></script>
+<script src="{{ url_for('static', filename='js/datetime-picker.js') }}"></script>
+{% endblock %}
+

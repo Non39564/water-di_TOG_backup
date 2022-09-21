@@ -5,89 +5,104 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+<!-- jquery css & script datepicker -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<!-- flatpicker -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
 <!-- DataTable css -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css" />
-<!-- Include Date Range Picker -->
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
 <!-- script pagination -->
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.12.1/dataRender/datetime.js"></script>
 <!--Chart-->
 <script>
-  google.charts.load('current', {'packages':['line']});
+  google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(drawChartLine_Summon);
 
 function drawChartLine_Summon() {
 
 var data = new google.visualization.DataTable();
 {% if custom == "True" %}
-data.addColumn('string', 'Day');
-{% endif %}
-{% if now == "True" %}
 data.addColumn('string', 'Time');
 {% endif %}
-{% if customday == "True" %}
+{% if now == "True" %}
 data.addColumn('string', 'Time');
 {% endif %}
 {% for chart_report in column %}
 data.addColumn('number', '{{ chart_report['Site'] }}');
 {% endfor %}
+data.addColumn('number', 'Low');
+data.addColumn('number', 'Monitor');
+data.addColumn('number', 'Normal');
 
 {% if now == "True" %}
 data.addRows([
 {% for chart_use in table %}
   ['{{ chart_use['Time'] }}', {{ chart_use['AI'] }}, {{ chart_use['Fisa 2'] }}, {{ chart_use['Fisa 3'] }}, {{ chart_use['Fisa 4'] }},
-  {{ chart_use['HC-3'] }}, {{ chart_use['HC-4'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-6'] }},
+  {{ chart_use['HC-3'] }}, {{ chart_use['HC-4'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-5 Station 2'] }}, {{ chart_use['HC-6'] }},
   {{ chart_use['L13'] }}, {{ chart_use['L14'] }}, {{ chart_use['L15 Station 1'] }}, {{ chart_use['L15 Station 2'] }},
-  {{ chart_use['ROBOT'] }} ],
+  {{ chart_use['ROBOT'] }},10 ,3, 17],
 {% endfor %}
 ]);
 {% endif %}
 {% if custom == "True" %}
 data.addRows([
 {% for chart_use in table %}
-  ['{{ chart_use['Date'] }}', {{ chart_use['AI'] }}, {{ chart_use['Fisa 2'] }}, {{ chart_use['Fisa 3'] }}, {{ chart_use['Fisa 4'] }},
-  {{ chart_use['HC-3'] }}, {{ chart_use['HC-4'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-6'] }},
-  {{ chart_use['L13'] }}, {{ chart_use['L14'] }}, {{ chart_use['L15 Station 1'] }}, {{ chart_use['L15 Station 2'] }},
-  {{ chart_use['ROBOT'] }} ],
-{% endfor %}
-]);
-{% endif %}
-{% if customday == "True" %}
-data.addRows([
-{% for chart_use in table %}
   ['{{ chart_use['Time'] }}', {{ chart_use['AI'] }}, {{ chart_use['Fisa 2'] }}, {{ chart_use['Fisa 3'] }}, {{ chart_use['Fisa 4'] }},
-  {{ chart_use['HC-3'] }}, {{ chart_use['HC-4'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-6'] }},
+  {{ chart_use['HC-3'] }}, {{ chart_use['HC-4'] }}, {{ chart_use['HC-5 Station 1'] }}, {{ chart_use['HC-5 Station 2'] }}, {{ chart_use['HC-6'] }},
   {{ chart_use['L13'] }}, {{ chart_use['L14'] }}, {{ chart_use['L15 Station 1'] }}, {{ chart_use['L15 Station 2'] }},
-  {{ chart_use['ROBOT'] }} ],
+  {{ chart_use['ROBOT'] }},10 ,3, 17 ],
 {% endfor %}
 ]);
 {% endif %}
 
 var options = {
-  chart: {
-  },
-  legend: 'none',
+  'width':1100,
+  'height':550,
+  isStacked: true,
   series: {
-    7: { color: '#3b5998' }
-  }
+    14: {
+      areaOpacity: 0.6,
+      color: '#EF9A9A',
+      visibleInLegend: false,
+      type: 'area'
+    },
+    15: {
+    areaOpacity: 0.6,
+    color: '#fee000',
+    visibleInLegend: false,
+    type: 'area'},
+    16: {
+      areaOpacity: 0.6,
+      color: '#9ff78d',
+      visibleInLegend: false,
+      type: 'area'},
+  },
+  
 };
 
-var chart = new google.charts.Line(document.getElementById('linechart_material'));
+var chart = new google.visualization.ComboChart(document.getElementById('linechart_material'));
 
-chart.draw(data, google.charts.Line.convertOptions(options));
+chart.draw(data, options);
 }
 
 $(window).resize(function(){
     drawChartLine_Summon();
   });
 </script>
+
+<!-- flatpicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 {% endblock %}
 {% block content %}
 
@@ -97,91 +112,65 @@ $(window).resize(function(){
     </h5>
     <div class="card-body pt-0">
       <div class="card mt-3">
-        <div class="card-header  bg-dark bg-gradient text-white">
+        <div class="card-header bg-dark bg-gradient text-white">
           <div class="row justify-content-lg-end">
-            <div class="col-lg-5">
+            <div class="col-lg-4">
               <h5>Deionized water</h5>
             </div>
-            <div class="col-lg-7 d-flex justify-content-lg-end ">
+            <div class="col-lg-8 d-flex justify-content-lg-end ">
+              <!-- date range filter -->
               <form action="{{ url_for('line') }}" method='POST'>
-                <div class="select-wrapper mb-2 ">
-                  <select  id="selection_day" name="selection_day" class="select select-initialized">
-                    <option value="0" selected>Choose Day</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                    <option value="24">24</option>
-                    <option value="25">25</option>
-                    <option value="26">26</option>
-                    <option value="27">27</option>
-                    <option value="28">28</option>
-                    <option value="29">29</option>
-                    <option value="30">30</option>
-                    <option value="31">31</option>
-                </select>
-                    <select  id="selection_month" name="selection_month" class="select select-initialized">
-                        <option value="" disabled selected>Choose Month</option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                    <select id="year" name="year" class="select select-initialized">
-                      <option value="" disabled selected>Choose Year</option>
-                      <option value="2022">2022</option>
-                      <option value="2023">2023</option>
-                      <option value="2024">2024</option>
-                      <option value="2025">2025</option>
-                      <option value="2026">2026</option>
-                      <option value="2027">2027</option>
-                      <option value="2028">2028</option>
-                      <option value="2029">2029</option>
-                      <option value="2030">2030</option>
-                      <option value="2031">2031</option>
-                      <option value="2032">2032</option>
-                      <option value="2033">2033</option>
-                  </select>
-                  <button type="submit" class="sendButton btn btn-primary pt-1 pb-1" id="search">GO</button>
-                </div>
+                <table cellspacing="5" cellpadding="5">
+                  <tbody>
+                    <tr >
+                      <td><h5 class="text-white mb-0">Choose Date :</h5></td>
+                      <td>
+                        <input type="text" class="form-control" id="pick_date_chart" name="pick_date_chart" />
+                      </td>
+                      <td>
+                        <button type="submit" class="btn btn-success"id="submit" name="submit"> Submit </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </form>
-          </div>
+              <!-- End date range filter -->
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <div id="linechart_material" class="display" style="height: 35rem;"></div>
+        <div class="card-body p-0 pb-2">
+          <div id="linechart_material" class="display" ></div>
         </div>
       </div>
       <div class="card mb-3 mt-3">
-        <h5 class="card-header d-flex justify-content-between bg-dark bg-gradient text-white">Table of  Deionized water
-        </h5>
+        <div class="card-header bg-dark bg-gradient text-white">
+          <div class="row justify-content-lg-end">
+            <div class="col-lg-3">
+              <h4>Table of  Deionized water</h4>
+            </div>
+            <div class="col-lg-9 d-flex justify-content-lg-end">
+              <!-- date range filter -->
+              <table cellspacing="5" cellpadding="5">
+                <tbody>
+                  <tr >
+                    <td><h5 class="text-white mb-0">Choose Date :</h5></td>
+                    <td><input type="text" class="form-control" id="start_date_tb"/></td>
+                    <td><h5 class="text-white mb-0">To</h5></td>
+                    <td><input type="text" class="form-control" id="end_date_tb"/></td>
+                    <td>
+                      <button class="btn btn-success"id="submit-1" name="submit-1"> Submit </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            <!-- End date range filter -->
+            </div>
+          </div>
+        </div>
         <div class="card-body p-3">
+          <a type="button" class="btn btn-success mb-3" href='/Table-of-Deionized-water'>
+            <i class="fa fa-file-excel me-2"></i><span>generate excel</span>
+          </a>
           <table class="display table align-middle mb-0 bg-white" id="line">
               <thead class="bg-light">
                 <tr>
@@ -194,34 +183,6 @@ $(window).resize(function(){
                   <th>Temp</th>
                 </tr>
               </thead>
-              <tbody>
-                {% for report in report %}
-                <tr>
-                  <td>
-                    <p class="text-muted mb-0">{{ report['Date'] }}</p>
-                  </td>
-                  <td>
-                    <p class="text-muted mb-0">{{ report['Time'] }}</p>
-                  </td>
-                  <td>
-                    <p class="text-muted mb-0">{{ report['Phase'] }}</p>
-                  </td>
-                  <td>
-                    <p class="text-muted mb-0">{{ report['Site'] }}</p>
-                  </td>
-                  <td class="bg-success" name="{{ report['Site'] }}">
-                    <p name="{{ report['Site'] }}" class="mb-0 Status{{ report['Site'] }}">Pass</p>
-                  </td>
-                  <td>
-                    <p class="text-muted mb-0">{{ report['Water'] }}</p>
-                    <input type="hidden" name="data{{ report['Site'] }}"  value="{{ report['Water'] }}">
-                  </td>
-                  <td>
-                    <p class="text-muted mb-0">{{ report['Temp'] }}</p>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
             </table>
         </div>
       </div>
@@ -230,27 +191,95 @@ $(window).resize(function(){
 
 {% endblock %}
 {% block script %}
-<script src="{{ url_for('static', filename='js/data-table-line.js') }}"></script>
 <script>
-  {% for reportscript in report %}
-  console.log($( 'input[name="data{{ reportscript['Site'] }}"]' ).val())
-  if ($( 'input[name="data{{ reportscript['Site'] }}"]' ).val() >= 12){
-    $('p[name="{{ reportscript['Site'] }}"]').text("Pass");
-  } else if ((10 <= $( 'input[name="data{{ reportscript['Site'] }}"]' ).val()) && ($( 'input[name="data{{ reportscript['Site'] }}"]' ).val() < 12)) {
-    $('p[name="{{ reportscript['Site'] }}"]').text("Monitor");
-    $('td[name="{{ reportscript['Site'] }}"]').removeClass("bg-success");
-    $('td[name="{{ reportscript['Site'] }}"]').addClass("bg-warning");
-  } else if ($('input[name="data{{ reportscript['Site'] }}"]' ).val() < 10) {
-    $('p[name="{{ reportscript['Site'] }}"]').text("Error");
-    $('td[name="{{ reportscript['Site'] }}"]').removeClass("bg-success");
-    $('td[name="{{ reportscript['Site'] }}"]').addClass("bg-danger");
-  }
-  {% endfor %}
+  var pick_date_chart = '';
+  
+  $("#pick_date_chart").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      pick_date_chart = dateStr;
+          console.log(dateStr);
+      },
+    })
 </script>
 <script>
   $('#year').on('change', function () {
     $('#search').prop('disabled', !$(this).val());
   }).trigger('change');
 </script>
+<script>
+  $(document).ready(function () {
+    var st_date_tb = '';
+    var end_date_tb = '';
 
+    $("#start_date_tb").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      st_date_tb = dateStr;
+          console.log(dateStr);
+      },
+    })
+  $("#end_date_tb").flatpickr({
+    onChange: function(selectedDates, dateStr, instance) {
+      end_date_tb = dateStr;
+          console.log(dateStr);
+      },
+    })
+
+    var data_table = $("#line").DataTable({
+      processing: true,
+      serverSide: true,
+      serverMethod: "post",
+      ajax: {
+        url: "/data_line",
+        data: function(d){
+          d.startdate = st_date_tb,
+          d.enddate = end_date_tb
+        }
+      },
+      lengthMenu: [
+        [10, 20, 30, 40, 50, -1], 
+        [10, 20, 30, 40, 50, 'All']
+      ],
+      searching: true,
+      sort: false,
+      createdRow: function (row, data, index) {
+        if (data.Status === "Pass" || data.Status === "Normal") {
+          $("td", row).eq(4).removeClass("text-danger");
+          $("td", row).eq(4).removeClass("text-warning");
+          $("td", row).eq(4).addClass("text-success");
+          $("td", row).eq(4).text("Normal");
+        } else if (data.Status === "Monitor"){
+          $("td", row).eq(4).removeClass("text-success");
+          $("td", row).eq(4).removeClass("text-danger");
+          $("td", row).eq(4).addClass("text-warning");
+          $("td", row).eq(4).text("Monitor");
+        } else if (data.Status === "Error" || data.Status === "Low"){
+          $("td", row).eq(4).removeClass("text-success");
+          $("td", row).eq(4).removeClass("text-warning");
+          $("td", row).eq(4).addClass("text-danger");
+          $("td", row).eq(4).text("Low");
+        }
+      },
+      columns: [
+        { data: "Date" },
+        { data: "Time" },
+        { data: "Phase" },
+        { data: "Site" },
+        { data: "Status" },
+        { data: "DIWater" },
+        { data: "Temp"},
+      ],
+      columnDefs: [
+        {
+          targets: 0,
+          render: function (data, type, row, meta) {
+            return moment.utc(data).local().format("YYYY-MM-DD");
+          },
+        },
+      ]
+    });
+    $("#submit-1").on("click", function () {
+      data_table.ajax.reload();
+    });
+  });
+</script>
 {% endblock %}

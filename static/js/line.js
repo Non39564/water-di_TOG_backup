@@ -1,4 +1,4 @@
-google.charts.load('current', {'packages':['line']});
+google.charts.load('current', {'packages':['corechart', 'line']});
 google.charts.setOnLoadCallback(drawLineChart);
 
 var timer = [];
@@ -22,28 +22,84 @@ $.getJSON('/dataapi', function (json) {
 
 function drawLineChart() {
 
+  var options = {
+    'width':500,
+    'height':500
+  }
+
     var optionsLP4 = {
+      isStacked: true,
         chart: {
           title: 'Phase4',
         },
-      //   width: 500,
-      // height: 250
+        series: {
+          1: {
+            areaOpacity: 0.6,
+            color: '#EF9A9A',
+            visibleInLegend: false,
+            type: 'area'
+          },
+          2: {
+            areaOpacity: 0.6,
+            color: '#fee000',
+            visibleInLegend: false,
+            type: 'area'},
+          3: {
+            areaOpacity: 0.6,
+            color: '#9ff78d',
+            visibleInLegend: false,
+            type: 'area'},
+        },
     };
 
     var optionsLP5 = {
+      isStacked: true,
       chart: {
         title: 'Phase5',
       },
-      // width: 500,
-      // height: 250
+      series: {
+        1: {
+          areaOpacity: 0.6,
+          color: '#EF9A9A',
+          visibleInLegend: false,
+          type: 'area'
+        },
+        2: {
+          areaOpacity: 0.6,
+          color: '#fee000',
+          visibleInLegend: false,
+          type: 'area'},
+        3: {
+          areaOpacity: 0.6,
+          color: '#9ff78d',
+          visibleInLegend: false,
+          type: 'area'},
+      },
     };
 
     var optionsLP9 = {
+      isStacked: true,
       chart: {
         title: 'Phase9',
       },
-      // width: 500,
-      // height: auto
+      series: {
+        0: {
+          areaOpacity: 0.6,
+          color: '#EF9A9A',
+          visibleInLegend: false,
+          type: 'area'
+        },
+        1: {
+          areaOpacity: 0.6,
+          color: '#fee000',
+          visibleInLegend: false,
+          type: 'area'},
+        2: {
+          areaOpacity: 0.6,
+          color: '#9ff78d',
+          visibleInLegend: false,
+          type: 'area'},
+      },
     };
 
       function drawLine() {
@@ -65,7 +121,6 @@ function drawLineChart() {
         //P5
         for (i in json[1].Data){
           window[json[1].Data[i].id.replace(/ +/g, "")].push(json[1].Data[i].Water);
-          console.log()
         }
         //P9
         for (i in json[2].Data){
@@ -93,8 +148,11 @@ function drawLineChart() {
           dataLP4.addColumn('number', json[0].Data[i].id);
           idP4.push(json[0].Data[i].id)
         }
+        dataLP4.addColumn('number', 'Low');
+        dataLP4.addColumn('number', 'Monitor');
+        dataLP4.addColumn('number', 'Normal');
         for (i = 0; i < timer.length; i++){
-          dataLP4.addRow([timer[i], ROBOT[i]]);//, Fisa2[i], Fisa4[i]
+          dataLP4.addRow([timer[i], ROBOT[i], 10, 3, 17]);//, Fisa2[i], Fisa4[i]
         };
         
         var dataLP5 = new google.visualization.DataTable();
@@ -108,24 +166,31 @@ function drawLineChart() {
 
         var dataLP9 = new google.visualization.DataTable();
         dataLP9.addColumn('string', 'Time');
-        //dataLP9.addColumn('number', json[2].Data[i].id);
+        dataLP9.addColumn('number', 'Low');
+        dataLP9.addColumn('number', 'Monitor');
+        dataLP9.addColumn('number', 'Normal');
         for (i in json[2].Data){
           dataLP9.addColumn('number', json[2].Data[i].id);
         }
         for(i = 0; i < timer.length; i++){
-          dataLP9.addRow([timer[i], HC4[i], HC3[i], HC6[i], HC5Station1[i], HC5Station2[i]]);//,AI[i]
+          dataLP9.addRow([timer[i], 10, 3, 17, HC4[i], HC3[i], HC6[i], HC5Station1[i], HC5Station2[i]]);//,AI[i]
         };
 
-        chartLP4.draw(dataLP4, google.charts.Line.convertOptions(optionsLP4));
-        chartLP5.draw(dataLP5, google.charts.Line.convertOptions(optionsLP5));
-        chartLP9.draw(dataLP9, google.charts.Line.convertOptions(optionsLP9));
+        chartLP4.draw(dataLP4, optionsLP4);
+        if (dataLP5.getNumberOfColumns() === 1){
+          $( "#dataP5" ).text( "No data available" );
+        } else {
+          chartLP5.draw(dataLP5, optionsLP5);
+        }
+        chartLP9.draw(dataLP9, 
+          optionsLP9);
         }); 
     }
     setInterval(drawLine, 1000);
 
-var chartLP4 = new google.charts.Line(document.getElementById('linechartP4'));
-var chartLP5 = new google.charts.Line(document.getElementById('linechartP5'));
-var chartLP9 = new google.charts.Line(document.getElementById('linechartP9'));
+var chartLP4 = new google.visualization.ComboChart(document.getElementById('linechartP4'));
+var chartLP5 = new google.visualization.ComboChart(document.getElementById('linechartP5'));
+var chartLP9 = new google.visualization.ComboChart(document.getElementById('linechartP9'));
 }
 
 $(window).resize(function(){

@@ -23,15 +23,15 @@
             <div class="row mb-4">
               <div class="form-group col-md-4">
                 <label for="OPadd">OP</label>
-                <input type="text" class="form-control" id="OPadd" name="OPadd">
+                <input type="text" class="form-control" id="OPadd" name="OPadd" placeholder="OP2">
               </div>
               <div class="form-group col-md-4">
                 <label for="Phaseadd">Phase</label>
-                <input type="text" class="form-control" id="Phaseadd" name="Phaseadd">
+                <input type="text" class="form-control" id="Phaseadd" name="Phaseadd" placeholder="Phase 4">
               </div>
               <div class="form-group col-md-4">
                 <label for="Siteadd">Site</label>
-                <input type="text" class="form-control" id="Siteadd" name="Siteadd">
+                <input type="text" class="form-control" id="Siteadd" name="Siteadd" placeholder="Fisa 4">
               </div>
             </div>
             <input type="hidden" value="phase" name="add">
@@ -164,7 +164,7 @@
               <td>
                 <!--<input type="text" class="form-control" name="Station_{{ edit_delete['Station'] }}" id="Station_{{ edit_delete['Station'] }}"
                   value={{ edit_delete['Station'] }}>-->
-                  <p>{{ edit_delete['Station'] }}</p>
+                  <p>{{ edit_delete['OP'] }}</p>
               </td>
               <td>
                 <!--<input type="text" class="form-control" name="Phase_{{ edit_delete['Phase'] }}" id="Phase_{{ edit_delete['Phase'] }}"
@@ -202,7 +202,6 @@
             {% endfor %}
           </tbody>
         </table>
-        
       </form>
     </div>
 </div>
@@ -306,6 +305,7 @@
     Slot_temp.append($('<option/>'))
 
     var Slot_Machine = slot[MachineID.val()];
+    console.log(slot)
 
     for (var i = 1; i < 15; i++) {
       Water.append($('<option/>', {'value': i, 'text': i}));
@@ -314,7 +314,6 @@
 
     for (var key in Slot_Machine) {
       $('select').find('option[value="' + Slot_Machine[key] +'"]').prop('disabled', true);
-      console.log(key)
     }
 
   });
@@ -368,7 +367,6 @@
   $( ".Edit" ).click(function() {
     window.open("edit?edit=" + $(this).val(), "_blank", 
     "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=300,width=800,height=500");
-    console.log($(this).val())
   })
-  </script>
+</script>
 {% endblock %}
